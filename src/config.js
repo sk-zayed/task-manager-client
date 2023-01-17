@@ -1,4 +1,5 @@
 export default {
-    snackDuration: 5000,
-    BASE_URL: "http://localhost:3000"
+    duration: 2000,
+    BASE_URL: "https://taskmanager-fuon.onrender.com",
+    // BASE_URL: "http://localhost:3000"
 };

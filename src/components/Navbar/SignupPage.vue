@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import Vue from "vue";
-import config from '@/config';
-import { signup } from "@/services/auth";
+import utils from "@/services/utils";
+import auth from "@/services/auth";
+
 export default {
     name: "SignupPage",
     data() {
@@ -59,7 +59,7 @@ export default {
                 email: "",
                 password: "",
                 cnfrmpass: "",
-            }
+            },
         };
     },
     methods: {
@@ -68,31 +68,21 @@ export default {
         },
 
         async signUp() {
-            if (this.$refs.form.validate()) {
-                try {
-                    const response = await signup(this.form);
+            try {
+                if (this.$refs.form.validate()) {
+                    const response = await auth.signup(this.form);
                     if (response.status === "success") {
-                        // window.location.reload();
-                        Vue.$toast.open({
-                        message: "Registration successful.",
-                        duration: config.duration,
-                        type: "success"
-                    });
-                    this.$router.push({ name: "home" });
+                        utils.showToast(
+                            "Registration successful. Please login.",
+                            "success"
+                        );
+                        this.$router.push({ name: "login" });
                     } else if (response.status === "error") {
-                        Vue.$toast.open({
-                        message: response.message,
-                        duration: config.duration,
-                        type: "error"
-                    });
+                        utils.showToast(response.message, "error");
                     }
-                } catch (error) {
-                    Vue.$toast.open({
-                        message: error.message,
-                        duration: config.duration,
-                        type: "error"
-                    });
                 }
+            } catch (error) {
+                utils.showToast(error.response.data.message, "error");
             }
         },
     },

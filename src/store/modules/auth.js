@@ -1,4 +1,4 @@
-import { login } from "@/services/auth";
+import authh from "@/services/auth";
 
 const KEY_NAME = "name";
 const KEY_EMAIL = "email";
@@ -19,6 +19,12 @@ const auth = {
         isAdmin(state) {
             return state.role === "admin";
         },
+        username(state) {
+            return state.name;
+        },
+        token(state) {
+            return state.token;
+        },
     },
     mutations: {
         setName(state, name) {
@@ -35,12 +41,8 @@ const auth = {
         },
     },
     actions: {
-        // credentials = { email: string, password: string }
-        // login( context, credentials ) {
         login({ commit }, credentials) {
-            // console.log( context ); // { commit: fn, getters: fn, }
-
-            return login(credentials).then((data) => {
+            return authh.login(credentials).then((data) => {
                 const { name, email, token, role } = data;
 
                 localStorage.setItem(KEY_NAME, name);
@@ -53,7 +55,7 @@ const auth = {
                 commit("setToken", token);
                 commit("setRole", role);
 
-                return email;
+                return name;
             });
         },
         logout({ commit }) {

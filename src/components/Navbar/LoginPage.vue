@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-form class="pt-4" ref="form">
+        <v-form class="pt-4" ref="loginForm">
             <v-text-field
                 :rules="[rules.required, rules.email]"
                 label="Email"
@@ -13,14 +13,21 @@
                 :type="show ? 'text' : 'password'"
                 label="Password"
                 @click:append="show = !show"
+                @keyup.enter="login"
             ></v-text-field>
             <v-btn dark @click="login">Login</v-btn>
         </v-form>
+        <div class="pt-8">
+            <div class="text--secondary pb-3">Tesing credentials:</div>
+            <div class="text--secondary">email: zayed@example.com</div>
+            <div class="text--secondary">password: zayed@123</div>
+        </div>
     </v-container>
 </template>
 <script>
-import Vue from "vue";
-import config from "@/config";
+import store from "@/store";
+import utils from "@/services/utils";
+
 export default {
     name: "LoginPage",
     data() {
@@ -40,29 +47,20 @@ export default {
             form: {
                 email: "",
                 password: "",
-            }
+            },
         };
     },
     methods: {
         login() {
-            if (this.$refs.form.validate()) {
-                this.$store
+            if (this.$refs.loginForm.validate()) {
+                store
                     .dispatch("login", this.form)
-                    .then(() => {
-                        // window.location.reload();
-                        Vue.$toast.open({
-                            message: "Login successful.",
-                            duration: config.duration,
-                            type: "success"
-                        });
+                    .then((user) => {
+                        utils.showToast(`Welcome ${user}!!`, "success");
                         this.$router.push({ name: "home" });
                     })
                     .catch((error) => {
-                        Vue.$toast.open({
-                            message: error.response.data.message,
-                            duration: config.duration,
-                            type: "error"
-                        });
+                        utils.showToast(error.response.data.message, "error");
                         this.form.email = "";
                         this.form.password = "";
                     });
