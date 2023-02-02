@@ -11,7 +11,7 @@
                 Due: {{ utils.formatDate(boardData.dueDate) || "Not set!" }}
             </div>
             <div class="pa-1">
-                {{ boardData.desc || "No description!" }}
+                {{ boardData.description || "No description!" }}
             </div>
             <div>
                 <v-row class="ma-0 pt-2">

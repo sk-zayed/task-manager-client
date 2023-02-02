@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     <v-icon
-                        :color="board.liked ? 'red' : 'default'"
+                        :color="board.likedBy.includes(userId) ? 'red' : 'default'"
                         @click="likeBoard(board._id)"
                         >mdi-heart</v-icon
                     >
@@ -87,6 +87,9 @@ export default {
         progress() {
             return this.board.progress;
         },
+        userId() {
+            return store.getters.userId;
+        }
     },
     methods: {
         async likeBoard(boardId) {
